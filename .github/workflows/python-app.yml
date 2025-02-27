@@ -44,12 +44,18 @@ jobs:
 #        run: |
 #          Compress-Archive -Path ${{ github.workspace }}/dist/fix_aircraft_fov.exe, ${{ github.workspace }}/README.md, ${{ github.workspace }}/LICENSE  -DestinationPath ${{ github.workspace }}/dist/FixAircraftFOV-${{ steps.extract_version.outputs.version }}.zip
 
+# we need to copy this to the dist/ so we don't get enclosing directories in the upload
+      - name: Copy LICENSE and README.md
+        run: |
+          Copy-Item ${{ github.workspace }}/LICENSE ${{ github.workspace }}/dist/
+          Copy-Item ${{ github.workspace }}/README.md ${{ github.workspace }}/dist/
+          
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: FixAircraftFOV-${{ steps.extract_version.outputs.version }}-${{ steps.date.outputs.now }}
           path: |
             ${{ github.workspace }}\dist\fix_aircraft_fov.exe
-            ${{ github.workspace }}\README.md
-            ${{ github.workspace }}\LICENSE
+            ${{ github.workspace }}\dist\README.md
+            ${{ github.workspace }}\dist\LICENSE
             
