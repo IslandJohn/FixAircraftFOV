@@ -48,7 +48,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: FixAircraftFOV-${{ steps.extract_version.outputs.version }}-${{ steps.date.outputs.now }}
-          path: 
+          path: |
             ${{ github.workspace }}\dist\fix_aircraft_fov.exe
             ${{ github.workspace }}\README.md
             ${{ github.workspace }}\LICENSE
