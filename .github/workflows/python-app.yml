@@ -45,7 +45,7 @@ jobs:
           Compress-Archive -Path ${{ github.workspace }}/dist/fix_aircraft_fov.exe, ${{ github.workspace }}/README.md, ${{ github.workspace }}/LICENSE  -DestinationPath ${{ github.workspace }}/dist/FixAircraftFOV-${{ steps.extract_version.outputs.version }}.zip
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: FixAircraftFOV-${{ steps.extract_version.outputs.version }}-${{ steps.date.outputs.now }}
           path: ${{ github.workspace }}/dist/FixAircraftFOV-${{ steps.extract_version.outputs.version }}.zip
