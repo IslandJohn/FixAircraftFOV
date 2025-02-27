@@ -1,0 +1,51 @@
+name: Build and Package Python EXE
+
+on:
+  push:
+    branches:
+      - main # or your desired branch
+  workflow_dispatch: # Enables manual triggering
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x' # or your desired Python version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Extract VERSION from script
+        id: extract_version
+        run: |
+          $version = (Get-Content ${{ github.workspace }}/src/fix_aircraft_fov.py | Select-String -Pattern '^VERSION = ["''](.*)["'']' | ForEach-Object {$_.Matches.Groups[1].Value})
+          echo "::set-output name=version::$version"
+
+      - name: Get current date and time
+        id: date
+        run: |
+          $date = Get-Date -Format "yyyyMMdd-HHmmss"
+          echo "::set-output name=now::$date"
+
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller --onefile ${{ github.workspace }}/src/fix_aircraft_fov.py
+
+      - name: Create ZIP archive
+        run: |
+          Compress-Archive -Path ${{ github.workspace }}/dist/fix_aircraft_fov.exe, ${{ github.workspace }}/README.md, ${{ github.workspace }}/LICENSE  -DestinationPath ${{ github.workspace }}/dist/FixAircraftFOV-${{ steps.extract_version.outputs.version }}.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: FixAircraftFOV-${{ steps.extract_version.outputs.version }}-${{ steps.date.outputs.now }}
+          path: ${{ github.workspace }}/dist/FixAircraftFOV-${{ steps.extract_version.outputs.version }}.zip
