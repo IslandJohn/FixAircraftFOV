@@ -2,13 +2,13 @@
 
 ## Overview
 
-The **Fix Aircraft FOV** tool aims to provide a solution for modifying and restoring camera zoom settings in Microsoft Flight Simulator.
+The **Fix Aircraft FOV** tool allows modifying and restoring camera zoom settings in Microsoft Flight Simulator.
 
 Most stock aircraft are set up correctly with a 0.35 zoom, and thus are consistent across models.
-However, many third-party aricraft or aircraft mods change this zoom setting, altering the expected FOV, which can make it difficult to adjust.
+However, many third-party aricraft or aircraft mods change this zoom setting, altering the expected FOV. 
 
 This tool ensures camera FOV consistency across all aircraft by allowing users to easily adjust the zoom levels in the `cameras.cfg` files used by the simulator.
-You can run it one time, or even script it into your MSFS startup flow so you're not surprised when an update botches this setting.
+You can run it one time, or even script it into your MSFS startup flow so you're not surprised when an add-on update changes this setting.
 
 
 ## Features

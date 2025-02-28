@@ -13,7 +13,7 @@ DRY_RUN = False
 FILE_STATS = {"total": 0, "modified": 0, "unchanged": 0, "errors": 0}
 
 # Version Number
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 
 
 class CasePreservingConfigParser(configparser.ConfigParser):
@@ -91,9 +91,16 @@ def section_matches_camera(config, section, camera_name):
     Returns:
         bool: True if the section matches, False otherwise.
     """
-    return "Title" in config[section] and (
-        config[section]["Title"] == camera_name or config[section]["Title"] == f'"{camera_name}"'
-    )
+    
+    if not "Title" in config[section]:
+        return False
+    
+    title_value = config[section]["Title"]    
+    title_value = title_value.split(';')[0]
+    title_value = title_value.strip()
+    title_value = title_value.strip('"\'')
+        
+    return title_value == camera_name
 
 
 def modify_section_initialzoom(config, section, camera_zoom):
@@ -113,6 +120,9 @@ def modify_section_initialzoom(config, section, camera_zoom):
         return False
 
     original_zoom = config[section]["InitialZoom"]
+    original_zoom = original_zoom.split(';')[0]
+    original_zoom = original_zoom.strip()
+
     if original_zoom == str(camera_zoom):
         print(f"  Info: Section '{section}' InitialZoom already set to '{camera_zoom}'.")
         return False
@@ -122,7 +132,7 @@ def modify_section_initialzoom(config, section, camera_zoom):
             f"  Dry-run: Would modify section '{section}', InitialZoom would change from '{original_zoom}' to '{camera_zoom}'"
         )
     else:
-        config[section]["InitialZoom"] = str(camera_zoom)
+        config[section]["InitialZoom"] = str(f"{camera_zoom} ; Modified by FixAircraftFOV: https://github.com/IslandJohn/FixAircraftFOV")
         print(f"  Modified section '{section}', InitialZoom changed from '{original_zoom}' to '{camera_zoom}'")
     return True
 
